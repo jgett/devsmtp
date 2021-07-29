@@ -1,6 +1,9 @@
 // This is the port used by express for websocket and downloading attacments. Change this if needed.
 var port = 3000;
 
+// This is the port used by the smtp server. Change this if needed.
+var smtpPort = 25552;
+
 const {v4: uuid} = require('uuid');
 const dayjs = require('dayjs');
 
@@ -16,7 +19,7 @@ function findMessage(id) {
 
 function getAttachment(args) {
     var msg = findMessage(args.id);
-    console.log(args);
+    
     if (msg) {
         if ('attachments' in msg) {
             var search = msg.attachments.filter(x => x.filename === args.file);
@@ -150,7 +153,6 @@ const smtp = new SMTPServer({
         console.log('email received');
         
         simpleParser(stream, null).then(parsed => {
-            //console.log(parsed);
             inbox[uuid()] = parsed;
             connectedSockets.broadcast();
         }).catch(err => {
@@ -159,9 +161,9 @@ const smtp = new SMTPServer({
     }
 });
 
-smtp.listen(25552);
+smtp.listen(smtpPort);
 
-console.log('devsmtp smtp server listening on port 25552');
+console.log(`devsmtp smtp server listening on port ${smtpPort}`);
 
 smtp.on("error", err => {
   console.log("Error %s", err.message);
