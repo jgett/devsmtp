@@ -1,4 +1,4 @@
-# devsmtp
+# devSMTP
 A local smtp server for developers
 
 This little node script gives you a local smtp server that you can send emails to with your application.
