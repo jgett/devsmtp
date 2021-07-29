@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col-2 text-end">
+        <strong>Received:</strong>
+    </div>
+    <div class="col">
+        {{{received}}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-2 text-end">
+        <strong>From:</strong>
+    </div>
+    <div class="col">
+        {{{from}}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-2 text-end">
+        <strong>To:</strong>
+    </div>
+    <div class="col">
+        {{{to}}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-2 text-end">
+        <strong>Cc:</strong>
+    </div>
+    <div class="col">
+        {{{cc}}}
+    </div>
+</div>
+{{#if attachments.length}}
+    <hr>
+    <div class="row">
+        <div class="col-2 text-end">
+            <strong>Attachments:</strong>
+        </div>
+        <div class="col">
+        {{#each attachments}}
+            <div><a href="http://localhost:3000/attachment/{{../id}}/{{this}}">{{this}}</a></div>
+        {{/each}}
+        </div>
+    </div>
+{{/if}}
+<hr>
+<div class="body">
+    {{{body}}}
+</div>
