@@ -7,6 +7,8 @@ This is useful when developing an app that uses email. You can see if emails are
 
 A websocket server provides data to your web browser for viewing and deleting received emails. Email sender, recipients, subject, body, and attachments are displayed.
 
+By default the smtp port is 25552. Send emails to localhost:25552 from you application. No authentication is needed. The websockets server runs on port 3000 by default. To change either port edit the variables at the top of the index.js file.
+
 ### Installation
 `git clone https://github.com/jgett/devsmtp.git`
 
@@ -20,6 +22,8 @@ A websocket server provides data to your web browser for viewing and deleting re
 A client for viewing emails is provided, however feel free to develop your own if you prefer.
 
 You can run a node http server using interface.js (run `node interface.js`) or configure a virtual directory in your web server to serve the static folder.
+
+By default the web interface runs on port 3001 (if you're using interface.js). To change this edit the variable at the top of the interface.js file.
 
 The websockets server uses cors so that websockets will work cross domain. This allows a client to run on any host and still cconnect to localhost for websockets.
 
