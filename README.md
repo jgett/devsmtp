@@ -5,6 +5,8 @@ This little node script gives you a local smtp server that you can send emails t
 
 This is useful when developing an app that uses email. You can see if emails are being sent correctly without dealing with a production smtp server.
 
+A websocket server provides data to your web browser for viewing and deleting received emails. Email sender, recipients, subject, body, and attachments are displayed.
+
 ### Installation
 `git clone https://github.com/jgett/devsmtp.git`
 
