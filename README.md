@@ -24,4 +24,6 @@ You can run a node http server using interface.js (run `node interface.js`) or c
 ### Service
 A script is provided to install devsmtp as a Windows service. Run `node service-install.js` to install and `node service-uinstall.js` to remove.
 
+Be sure to install node-windows and run `npm link node-windows` before running these scripts.
+
 Of course feel free to use any other mechanism for running a node script as a background task, such as nssm or PM2.
