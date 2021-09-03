@@ -22,3 +22,13 @@ body {
 .delete-button {
     color: red;
 }
+
+.body table {
+    border-collapse: separate;
+}
+
+.body tbody, .body td, .body tfoot, .body th, .body thead, .body tr {
+    border-color: inherit;
+    border-style: solid;
+    border-width: 1px;
+}

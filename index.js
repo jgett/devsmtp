@@ -1,9 +1,18 @@
 
-// This is the port used by express for websocket and downloading attacments. Change this if needed.
+// This is the port used by express for websocket and downloading attachments. Change this if needed.
 var port = 3000;
 
 // This is the port used by the smtp server. Change this if needed.
 var smtpPort = 25552;
+
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
+
+function getHtmlBody(html) {
+    const dom = new JSDOM(html);
+    const body = dom.window.document.querySelector("body");
+    return body.innerHTML;
+}
 
 const {v4: uuid} = require('uuid');
 const dayjs = require('dayjs');
@@ -16,6 +25,27 @@ function removeMessage(id) {
 
 function findMessage(id) {
     return inbox[id];
+}
+
+function getInboxItem(msg) {
+    var from = ('from' in msg) ? msg.from.html : "";
+    var to = ('to' in msg) ? msg.to.html : "";
+    var cc = ('cc' in msg) ? msg.cc.html : "";
+    var atts = ('attachments' in msg) ? msg.attachments.map(a => a.filename) : [];
+    var isHtml = msg.html !== false;
+    var body = isHtml ? getHtmlBody(msg.html) : msg.text;
+
+    return {
+        "id": uuid(),
+        "subject": msg.subject,
+        "received": dayjs(msg.date).format('YYYY-MM-DD HH:mm:ss'),
+        "from": from,
+        "to": to,
+        "cc": cc,
+        "body": body,
+        "attachments": atts,
+        "isHtml": isHtml
+    };
 }
 
 function getAttachment(args) {
@@ -36,27 +66,12 @@ function getAttachment(args) {
 
 function getInboxItems() {
     var result = [];
-    
+
     for (let id in inbox) {
         var msg = inbox[id];
-        
-        var from = ('from' in msg) ? msg.from.html : "";
-        var to = ('to' in msg) ? msg.to.html : "";
-        var cc = ('cc' in msg) ? msg.cc.html : "";
-        var atts = ('attachments' in msg) ? msg.attachments.map(a => a.filename) : [];
-        
-        result.push({
-            "id": id,
-            "subject": msg.subject,
-            "received": dayjs(msg.date).format('YYYY-MM-DD HH:mm:ss'),
-            "from": from,
-            "to": to,
-            "cc": cc,
-            "body": msg.textAsHtml,
-            "attachments": atts
-        });
+        result.push(msg);
     }
-    
+
     return result;
 }
 
@@ -154,7 +169,8 @@ const smtp = new SMTPServer({
         console.log('email received');
         
         simpleParser(stream, null).then(parsed => {
-            inbox[uuid()] = parsed;
+            var item = getInboxItem(parsed);
+            inbox[item.id] = item;
             connectedSockets.broadcast();
         }).catch(err => {
             console.log(err);
