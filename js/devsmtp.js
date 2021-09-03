@@ -6,7 +6,9 @@
             var opts = $.extend({"templates": null, "wsurl": null}, options);
             
             var getAlert = function(msg) {
-                return $("<div/>", {"class": "alert alert-danger", "role": "alert"}).html(msg);
+                return $("<div/>", {"class": "alert alert-danger alert-dismissible fade show", "role": "alert"})
+                    .append(msg)
+                    .append($('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'));
             };
             
             var showMissingRequiredOptionAlert = function(name) {
@@ -23,9 +25,10 @@
                 return;
             }
             
-            const ws = new WebSocket(opts.wsurl);
-            
             var data = null;
+            var isOpen = false;
+            
+            const ws = new WebSocket(opts.wsurl);
             
             var getMessage = function(id) {
                 var result = data.inbox.filter(function(x) {
@@ -38,9 +41,18 @@
                     return null;
             };
             
+            ws.onopen = function(e) {
+                isOpen = true;
+            };
+            
             ws.onmessage = function(msg) {
                 data = JSON.parse(msg.data);
                 $(".inbox", $this).html(opts.templates.inbox(data));
+            };
+            
+            ws.onerror = function(err) {
+                var alert = getAlert("A websocket error occurred. Is the service running?");
+                $this.prepend(alert);
             };
             
             $this.on("click", ".delete-all-button", function(e){
